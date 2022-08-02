@@ -1,0 +1,12 @@
+<h1><%= @articles.title %></h1>
+<div id="editor"></div>
+
+<script>
+const data = JSON.parse(JSON.stringify('<%= @articles.articles %>'));
+console.log(data)
+this.editor = new EditorJS({
+    holder: 'editor',
+    data: <%= @articles.articles %>,
+    readOnly: true,
+});
+</script>

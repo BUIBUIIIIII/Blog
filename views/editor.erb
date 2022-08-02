@@ -1,0 +1,24 @@
+<div id="editor"></div>
+<button onclick="save()">save</button>
+<script>
+    const editor = new EditorJS('editor');
+    
+    function save() {
+        editor.save().then((outputData) => {
+            console.log('Article data: ', outputData)
+            var articles = JSON.stringify(outputData);
+            $.ajax({
+                type: "POST",
+                url: "/post-articles",
+                dataType: "json",
+                data: {
+                    title: "sample",
+                    articles: articles,
+                    // articles: outputData
+                }
+            });
+        }).catch((error) => {
+            console.log('Saving failed: ', error)
+        });
+    }
+</script>

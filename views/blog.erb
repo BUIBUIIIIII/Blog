@@ -1,0 +1,20 @@
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>title</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @articles.each do |article| %>
+            <tr>
+                <td>
+                    <a href="blog/<%= article.id %>">
+                        <%= article.title %>
+                    </a>
+                </td>
+            </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
