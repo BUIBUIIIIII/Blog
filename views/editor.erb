@@ -7,64 +7,33 @@
             image: {
                 class: ImageTool,
                 config: {
-                    // endpoints: {
-                    //     byFile: '/post-images-file', // Your backend file uploader endpoint
-                    //     byUrl: '/post-images-url', // Your endpoint that provides uploading by Url
-                    // }
                     uploader: {
                         uploadByFile(file){
                             return new Promise((resolve) => {
                                 var formData = new FormData();
                                 formData.append("image", file);
-                                $.ajax({
-                                    type: "POST",
-                                    url: "/post-images-file",
-                                    datatype: "json",
-                                    data: formData,
-                                    async: false,
-                                    processData: false,
-                                    contentType: false,
-                                    
-                                })
-                                function sample(){
-                                    var json = $.ajax({
-                                        type: "GET",
-                                        url: "/get-images-file",
+                                function post(){
+                                    return $.ajax({
+                                        type: "POST",
+                                        url: "/post-images-file",
                                         datatype: "json",
-                                        // data: { success: success, file: { url: url}},
-                                        async: false,
-                                    }).responseText;
-                                    return json;
+                                        data: formData,
+                                        processData: false,
+                                        contentType: false,
+                                    });
                                 }
-                                var json = sample(json)
-                                // console.log(json)
-                                var result = JSON.parse(json)
-                                console.log(result)
-                                var image = result.url
-                                console.log(image)
-                                resolve({success:1, file:{url:image}})
-                                
-                                // console.log(json)
-                                // console.log(json.url)
-                                // var url = result.url
-                                // console.log(url)
-                                // var json = JSON.parse(result)
-                                // console.log(result)
-                                // resolve(result);
+                                post().done(function (json) {
+                                    var json = JSON.parse(json)
+                                    console.log(json)
+                                    resolve(json)
+                                })
                             })
                         },
                         uploadByUrl(url){
                             return new Promise((resolve) => {
-                                // $.ajax({type: "POST",url: "/post-image-url",dataType: "json",data: {url:url}});
                                 resolve({ success: 1, file: { url: url }});
                                 });
                         },
-                        // uploadByUrl(url){
-                        
-                        //     return MyAjax.upload(file).then(() => {
-                        //         return {success: 1,file: {url: url}}
-                        //     })
-                        // }
                     }
                 }
             }
@@ -82,7 +51,6 @@
                 data: {
                     title: "sample",
                     articles: articles,
-                    // articles: outputData
                 }
             });
         }).catch((error) => {
