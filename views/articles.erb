@@ -1,12 +1,21 @@
-<h1><%= @articles.title %></h1>
+<!--<h1></h1>-->
 <div id="editor"></div>
+<div id="wrapper">
+    <div id="header"></div>
+</div>
 
 <script>
-const data = JSON.parse(JSON.stringify('<%= @articles.articles %>'));
+const data = JSON.parse('<%= @articles.articles %>');
+// const data = ''
 console.log(data)
-this.editor = new EditorJS({
+const editor = new EditorJS({
     holder: 'editor',
-    data: <%= @articles.articles %>,
+    tools: {
+        image: {
+            class :ImageTool,
+        }
+    },
+    data: data,
     readOnly: true,
 });
 </script>

@@ -38,7 +38,7 @@ post '/post-articles' do
     Article.create(
         title: params[:title],
         articles: params[:articles]
-        )
+    )
 end
 
 post '/post-images-file' do
@@ -48,14 +48,13 @@ post '/post-images-file' do
         tempfile = img[:tempfile]
         upload = Cloudinary::Uploader.upload(tempfile.path)
         img_url = upload['url']
-        data = {
-            "success" => 1,
-            "file" => {
-                "url" => img_url
+        json = {
+            "success": 1,
+            "file": {
+                "url": img_url
             }
         }
-        json = data.to_json
         puts json
-        return json
+        json.to_json
     end
 end
