@@ -8,6 +8,7 @@ require 'sinatra/activerecord'
 require './models'
 require 'dotenv'
 require 'cloudinary'
+enable :sessions
 
 before do
     Dotenv.load
@@ -18,9 +19,32 @@ before do
     end
 end
 
-get '/' do
-    @url = ""
-    erb :editor
+# get '/edit' do
+#     @url = ""
+#     erb :editor
+# end
+
+get '/edit' do
+    # @url = ""
+    if session[:admin] == true
+        @url = ""
+        erb :editor
+    else
+        # redirect '/editor_login'
+        # @url = ""
+        erb :editor_login
+    end
+end
+
+post '/editor_login' do
+    username=params[:username]
+    password=params[:password]
+    if username == ENV['USERNAME'] && password == ENV['PASSWORD']
+        session[:admin] = true
+        redirect '/edit'
+    end
+    # @url = ""
+    # erb :editor
 end
 
 get '/blog' do
