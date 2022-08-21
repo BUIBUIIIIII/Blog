@@ -8,6 +8,8 @@ require 'sinatra/activerecord'
 require './models'
 require 'dotenv'
 require 'cloudinary'
+# require 'rack/cache'
+# require 'sinatra'
 enable :sessions
 
 before do
@@ -19,32 +21,24 @@ before do
     end
 end
 
-# get '/edit' do
-#     @url = ""
-#     erb :editor
-# end
-
-get '/edit' do
-    # @url = ""
-    if session[:admin] == true
-        @url = ""
-        erb :editor
-    else
-        # redirect '/editor_login'
-        # @url = ""
-        erb :editor_login
+helpers do
+  def protected!
+    unless authorized?
+      response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
+      throw(:halt, [401, "Not authorized\n"])
     end
+  end
+
+  def authorized?
+    @auth ||=  Rack::Auth::Basic::Request.new(request.env)
+    @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == [ENV['USERNAME'], ENV['PASSWORD']]
+  end
 end
 
-post '/editor_login' do
-    username=params[:username]
-    password=params[:password]
-    if username == ENV['USERNAME'] && password == ENV['PASSWORD']
-        session[:admin] = true
-        redirect '/edit'
-    end
-    # @url = ""
-    # erb :editor
+get '/edit' do
+    protected!
+    @url = ""
+    erb :editor
 end
 
 get '/blog' do

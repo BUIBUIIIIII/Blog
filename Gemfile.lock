@@ -115,6 +115,7 @@ DEPENDENCIES
   fastri
   pg (~> 1.2)
   pry
+  rack
   rack-contrib
   rake
   rcodetools
