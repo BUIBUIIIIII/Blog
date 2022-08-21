@@ -8,9 +8,6 @@ require 'sinatra/activerecord'
 require './models'
 require 'dotenv'
 require 'cloudinary'
-# require 'rack/cache'
-# require 'sinatra'
-enable :sessions
 
 before do
     Dotenv.load
