@@ -32,6 +32,10 @@ helpers do
   end
 end
 
+get '/' do
+    erb :blog
+end
+
 get '/edit' do
     protected!
     @url = ""
