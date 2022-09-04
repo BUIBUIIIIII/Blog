@@ -9,6 +9,8 @@ require './models'
 require 'dotenv'
 require 'cloudinary'
 
+enable :sessions
+
 before do
     Dotenv.load
     Cloudinary.config do |config|
@@ -19,25 +21,49 @@ before do
 end
 
 helpers do
-  def protected!
-    unless authorized?
-      response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
-      throw(:halt, [401, "Not authorized\n"])
+    def current_user
+        User.find_by(id:session[:user])
     end
-  end
-
-  def authorized?
-    @auth ||=  Rack::Auth::Basic::Request.new(request.env)
-    @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == [ENV['USERNAME'], ENV['PASSWORD']]
-  end
 end
 
 get '/' do
-    erb :blog
+    redirect '/blog'
+end
+
+get '/signin' do
+    erb :sign_in
+end
+
+get 'signup' do
+    erb :sign_up
+end
+
+post '/signin' do
+    user = User.find_by(username: username)
+    if user then
+        if password == user.password then
+            session[:user] = user.id
+        end
+    end
+    redirect '/'
+end
+
+post '/signup' do
+    @user = User.create(mail:params[:mail], password:params[:password],
+    password_confirmation:params[:password_confirmation])
+    if @user.persisted?
+        session[:user] = @user.id
+    end
+    redirect '/'
+end
+
+get '/signout' do
+    session[:user] = nil
+    redirect '/'
 end
 
 get '/edit' do
-    protected!
+    # protected!
     @url = ""
     erb :editor
 end
