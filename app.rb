@@ -80,9 +80,11 @@ end
 
 post '/post-articles' do
     puts params
+    # data = params
     Article.create(
         title: params[:title],
-        articles: params[:articles]
+        articles: params[:articles],
+        thumbnail: params[:thumbnail]
     )
 end
 

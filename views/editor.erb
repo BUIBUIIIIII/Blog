@@ -42,7 +42,19 @@
     
     function save() {
         editor.save().then((outputData) => {
-            console.log('Article data: ', outputData)
+            console.log('Article data: ', outputData);
+            var image_url = ''
+            
+            for (var x of outputData.blocks) {
+                try {
+                    var url = x.data.file.url;
+                    image_url = url
+                    break
+                } catch(e) {
+                    console.log('this is not image')
+                }
+            }
+            console.log('image_url:' , image_url)
             var articles = JSON.stringify(outputData);
             $.ajax({
                 type: "POST",
@@ -51,6 +63,7 @@
                 data: {
                     title: "sample",
                     articles: articles,
+                    thumbnail: image_url,
                 }
             });
         }).catch((error) => {
